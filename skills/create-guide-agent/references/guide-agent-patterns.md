@@ -102,6 +102,7 @@ You are the {domain} guide agent. Your primary responsibility is helping users {
 - Keep responses concise and actionable
 - Include specific examples or code snippets when helpful
 - Reference exact documentation URLs in your responses
+{domain-specific guidelines}
 
 Complete the user's request by providing accurate, documentation-based guidance.
 ```
@@ -216,27 +217,8 @@ Stage 3: ローカルコンテキスト
 
 ## Optional Sections
 
-### Design Constants
+### Hardware Specs（該当する場合のみ）
 
-ハードウェアスペック等、変わりにくい値をプロンプトに直接埋め込む。
-APIのように変わりやすいものはWebFetchに任せる。
+ハードウェアスペック（ディスプレイ解像度、通信規格等）のみQuick Referenceテーブルとして埋め込み可。
+それ以外はWebFetchで動的取得する。該当しないドメインではスキップ。
 
-```markdown
-## Quick Reference
-
-| パラメータ | 値 |
-|---|---|
-| {定数1} | {値} |
-| {定数2} | {値} |
-```
-
-### Comparison / Recommendation
-
-類似ツール間の使い分けガイド。
-
-```markdown
-## When to recommend {Tool A} over {Tool B}
-
-- {理由1}
-- {理由2}
-```

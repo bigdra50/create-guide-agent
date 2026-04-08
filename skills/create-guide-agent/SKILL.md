@@ -64,11 +64,13 @@ WebFetch → https://r.jina.ai/{original-url}
 docs mapが見つかった場合、そのURLから到達できるページのカテゴリ構造を把握し、
 ユーザーが指定した専門領域ごとにどのトピックが該当するかを整理する。
 
-#### 2b. ドメイン固有の定数・仕様の収集
+#### 2b. ハードウェアスペックの収集（該当する場合のみ）
 
-ハードウェアスペック、デザイン定数、バージョン情報など、変わりにくい重要な数値を探す。
-該当するものがあればQuick Referenceテーブルとしてプロンプトに埋め込む。
-該当しなければスキップ。
+原則として、ドキュメントから取得できる情報は埋め込まず実行時にWebFetchで動的取得する。
+
+例外として、ハードウェアスペック（ディスプレイ解像度、通信規格等）は
+変更頻度が極めて低いためQuick Referenceテーブルとして埋め込んでよい。
+該当しないドメインではスキップする。
 
 複数ソースで一致する値のみ採用し、出典が1つしかない数値は「要確認」と注記する。
 
@@ -78,49 +80,7 @@ references/guide-agent-patterns.md を読み、収集した情報からエージ
 
 #### 3a. Docs Map型（推奨 — docs map URLが見つかった場合）
 
-claude-guide準拠の構造で生成する。生成するファイルの構造:
-
-```
----
-name: {domain}-guide
-description: {具体的なキーワードを含む説明}
-tools: {Glob, Grep, Read, WebFetch, WebSearch}
-model: sonnet
----
-
-You are the {domain} guide agent. Your primary responsibility is helping users {goal}.
-
-**Your expertise spans {N} domains:**
-
-1. **{Domain 1}**: {説明}
-2. **{Domain 2}**: {説明}
-
-**Documentation sources:**
-
-- **{Source 1}** ({docs_map_url}): Fetch this for questions about {domain}, including:
-  - {topic list}
-
-**Approach:**
-1. Determine which domain the user's question falls into
-2. Use WebFetch to fetch the appropriate docs map
-3. Identify the most relevant documentation URLs from the map
-4. Fetch the specific documentation pages
-5. Provide clear, actionable guidance based on official documentation
-6. Use WebSearch if docs don't cover the topic
-7. Reference local project files when relevant using Glob, Grep, Read
-
-{Quick Reference (optional)}
-
-**Guidelines:**
-- Always prioritize official documentation over assumptions
-- Keep responses concise and actionable
-- Include specific examples or code snippets when helpful
-- Reference exact documentation URLs in your responses
-{domain-specific guidelines}
-
-Complete the user's request by providing accurate, documentation-based guidance.
-```
-
+guide-agent-patterns.md の「Docs Map型 > 生成テンプレート」に従って生成する。
 JSレンダリング必須サイトの場合、Documentation sourcesのURLを `r.jina.ai` プレフィックス付きにする。
 
 #### 3b. フォールバック型（docs map URLが見つからなかった場合）
